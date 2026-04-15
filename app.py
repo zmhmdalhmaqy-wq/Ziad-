@@ -29,81 +29,81 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 # ============== بيانات المسؤول ==============
-ADMIN_USERNAME = "dont"
-ADMIN_PASSWORD_RAW = "know"
+ADMIN_USERNAME = "225#"
+ADMIN_PASSWORD_RAW = "225#"
 
 # ============== إعدادات البوت والإشعارات ==============
 BOT_TOKEN = "8721873030:AAG21uK3LxQjNylY-mLUIiInzwngLAdArjI"
 ADMIN_TELEGRAM_ID = 8091512031
 ADMIN_TELEGRAM_USERNAME = "@ELZO_z"
 
-def notify_admin(message: str):
+def  notify_admin ( message: str ) :
     """إرسال إشعار للأدمن على تليجرام"""
-    try:
-        requests.post(
-            f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
-            json={"chat_id": ADMIN_TELEGRAM_ID, "text": message, "parse_mode": "Markdown"},
-            timeout=10
+    يحاول :
+        طلبات. إرسال (
+            f"https://api.telegram.org/bot { BOT_TOKEN } /sendMessage" ,
+            json= { "chat_id" : ADMIN_TELEGRAM_ID, "text" : message, "parse_mode" : "Markdown" } ,
+            مهلة = 10
         )
-    except Exception:
-        pass
+    باستثناء الاستثناء:
+        يمر
 
-# ============== قاعدة البيانات ==============
-DB_FILE = os.path.join(BASE_DIR, "db.json")
+# =============================================================================
+DB_FILE = os.path.join ( BASE_DIR , " db.json " )
 
-def load_db():
-    if os.path.exists(DB_FILE):
-        try:
-            with open(DB_FILE, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                # تأكد من وجود الحقول الجديدة
-                if "plans" not in data:
-                    data["plans"] = {}
-                return data
-        except Exception:
-            pass
-    admin_hash = hashlib.sha256(ADMIN_PASSWORD_RAW.encode()).hexdigest()
+دالة  تحميل قاعدة البيانات ( ) :
+    إذا كان مسار قاعدة البيانات موجودًا ( DB_FILE ) :
+        يحاول :
+            with  open ( DB_FILE, 'r' , encoding= 'utf-8' )  as f:
+                data = json.load ( f )
+                #تأكد من وجود وجود جديد
+                إذا  لم تكن "الخطط" موجودة  في البيانات: 
+                    data [ "plans" ] = { }
+                بيانات الإرجاع
+        باستثناء الاستثناء:
+            يمر
+    admin_hash = hashlib.sha256 ( ADMIN_PASSWORD_RAW.encode ( ) ) . hexdigest ( )
     default_db = {
-        "users": {
-            ADMIN_USERNAME: {
-                "password": admin_hash,
-                "is_admin": True,
-                "created_at": str(datetime.now()),
-                "max_servers": 999999,
-                "expiry_days": 3650,
-                "last_login": None,
-                "telegram_id": None,
-                "api_key": None,
-                "storage_limit": 10240,
-                "plan": "admin"
+        "المستخدمون" : {
+            اسم مستخدم المسؤول: {
+                كلمة المرور : admin_hash،
+                "is_admin" : صحيح ،
+                "created_at" : str ( datetime. now ( ) ) ,
+                "max_servers" : 999999 ,
+                "أيام_الانتهاء" : 3650 ،
+                "last_login" : لا شيء ،
+                "telegram_id" : لا شيء ،
+                "api_key" : لا شيء ،
+                "storage_limit" : 10240 ،
+                "خطة" : "إدارة"
             }
-        },
-        "servers": {},
-        "logs": [],
-        "plans": {
-            "free": {"name": "🎁 مجاني", "storage": 512000, "ram": 256, "cpu": 0.5, "max_servers": 2, "price": 0},
-            "4gb": {"name": " 1000 جيجا", "storage": 4096000, "ram": 1024, "cpu": 1, "max_servers": 5, "price": 5},
-            "10gb": {"name": "💎 10000 جيجا", "storage": 10240000, "ram": 2048, "cpu": 2, "max_servers": 10, "price": 10},
-            "40gb": {"name": "💎 40000 جيجا", "storage": 40960000, "ram": 4096, "cpu": 4, "max_servers": 20, "price": 25}
+        } ,
+        "servers" : { } ,
+        "السجلات" : [ ] ،
+        "الخطط" : {
+            "free" : { "name" : "🎁 مجاني" , "storage" : 512000 , "ram" : 256 , "cpu" : 0.5 , "max_servers" : 2 , "price" : 0 } ,
+            "4 جيجابايت" : { "الاسم" : "1000 جيجابايت" , "التخزين" : 4096000 , "ذاكرة الوصول العشوائي" : 1024 , "وحدة المعالجة المركزية" : 1 , "الحد الأقصى للخوادم" : 5 , "السعر" : 5 } ,
+            "10 جيجابايت" : { "الاسم" : "💎 10000 جيجابايت" , "التخزين" : 10240000 , "الذاكرة العشوائية" : 2048 , "وحدة المعالجة المركزية" : 2 , "الحد الأقصى للخوادم" : 10 , "السعر" : 10 } ,
+            "40 جيجابايت" : { "الاسم" : "💎 40000 جيجابايت" , "التخزين" : 40960000 , "الذاكرة العشوائية" : 4096 , "وحدة المعالجة المركزية" : 4 , "الحد الأقصى للخوادم" : 20 , "السعر" : 25 }
         }
     }
-    save_db(default_db)
-    return default_db
+    save_db ( default_db )
+    إرجاع قاعدة البيانات الافتراضية
 
-def save_db(db_data):
-    try:
-        with open(DB_FILE, 'w', encoding='utf-8') as f:
-            json.dump(db_data, f, indent=4, ensure_ascii=False)
-        return True
-    except Exception as e:
-        print(f"❌ خطأ في حفظ DB: {e}")
-        return False
+def  save_db ( db_data ) :
+    يحاول :
+        with  open ( DB_FILE, 'w' , encoding= 'utf-8' )  as f:
+            json.dump ( db_data , f, indent= 4 , ensure_ascii= False )
+        إرجاع  صحيح
+    باستثناء الاستثناء كـ e:
+        طباعة ( f"❌ خطأ في حفظ DB: { e } " )
+        إرجاع  خطأ
 
-db = load_db()
+db = load_db ( )
 
-# ============== المنافذ ==============
+# ==================================================================================
 PORT_RANGE_START = 8100
-PORT_RANGE_END = 9100
+نهاية نطاق المنفذ = 9100
 
 def get_assigned_port():
     used = set()
